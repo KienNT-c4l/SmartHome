@@ -1,0 +1,4 @@
+load-dotenv==0.1.0 
+python-dotenv==1.1.1
+python-telegram-bot==22.3
+paho-mqtt==1.6.0
