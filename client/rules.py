@@ -1,15 +1,25 @@
 import json
 from paho.mqtt import client as mqtt_client
+
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from server.notify import send_telegram_alert as sta
+
+import asyncio
+import threading
+loop = asyncio.new_event_loop()
+asyncio_thread = threading.Thread(target=loop.run_forever, daemon=True)
+asyncio_thread.start()
+
+from server.notify import send_telegram_alert
+from HiveMQ import HiveMQ_Info
+
 
 # --- Thông số HiveMQ ---
-broker = 'broker.hivemq.com'
-port = 1883
-topic = 'home/temperature'  # sửa nếu topic khác
-client_id = 'smarthome-rules'
+broker = HiveMQ_Info.broker
+port = HiveMQ_Info.port
+topic = HiveMQ_Info.topic # sửa nếu topic khác
+client_id = HiveMQ_Info.client_id
 
 # --- Ngưỡng cảnh báo ---
 TEMP_THRESHOLD = 30.0  # °C
@@ -25,19 +35,18 @@ def on_message(client, userdata, msg):
     try:
         payload = msg.payload.decode()
         data = json.loads(payload)  # ví dụ: {"temp": 31.2}
-
         temperature = data.get("temp")
 
         print(f" Nhiệt độ nhận được: {temperature}°C")
 
         if temperature > TEMP_THRESHOLD:
             message = f" Cảnh báo! Nhiệt độ hiện tại là {temperature}°C (vượt ngưỡng {TEMP_THRESHOLD}°C)"
-            sta(message)
+            asyncio.run_coroutine_threadsafe(send_telegram_alert(message), loop)
 
     except Exception as e:
         print(f" Lỗi khi xử lý dữ liệu: {e}")
 
-def run():
+def main():
     client = mqtt_client.Client(client_id)
     client.on_connect = on_connect
     client.on_message = on_message
@@ -46,4 +55,4 @@ def run():
     client.loop_forever()
 
 if __name__ == '__main__':
-    run()
+    main()
