@@ -22,7 +22,7 @@ topic = HiveMQ_Info.topic # sửa nếu topic khác
 client_id = HiveMQ_Info.client_id
 
 # --- Ngưỡng cảnh báo ---
-TEMP_THRESHOLD = 30.0  # °C
+TEMP_THRESHOLD = HiveMQ_Info.TEMP_THRESHOLD
 
 def on_connect(client, userdata, flags, rc):
     if rc == 0:

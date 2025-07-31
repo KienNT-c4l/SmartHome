@@ -24,9 +24,12 @@ def publish(client):
     payload = json.dumps({"temp": temp_value})
     client.publish(topic, payload)
     print(f" Đã gửi: {payload}")
-
-if __name__ == '__main__':
+    
+def main():
     client = connect_mqtt()
     while True:
         publish(client)
         time.sleep(2)
+
+if __name__ == '__main__':
+    main()
