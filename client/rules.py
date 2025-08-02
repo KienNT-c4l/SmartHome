@@ -35,12 +35,13 @@ def on_message(client, userdata, msg):
     try:
         payload = msg.payload.decode()
         data = json.loads(payload)  # ví dụ: {"temp": 31.2}
-        temperature = data.get("temp")
+        temp = data.get("temperature", 'N/A')  # nếu không có, mặc định là "N/A"
+        hum = data.get("humidity", "N/A")  # nếu không có, mặc định là "N/A"
 
-        print(f" Nhiệt độ nhận được: {temperature}°C")
+        print(f" Nhiệt độ: {temp}°C, độ ẩm: {hum}%")
 
-        if temperature > TEMP_THRESHOLD:
-            message = f" Cảnh báo! Nhiệt độ hiện tại là {temperature}°C (vượt ngưỡng {TEMP_THRESHOLD}°C)"
+        if temp > TEMP_THRESHOLD:
+            message = f" Cảnh báo! Nhiệt độ hiện tại là {temp}°C (vượt ngưỡng {TEMP_THRESHOLD}°C)"
             asyncio.run_coroutine_threadsafe(send_telegram_alert(message), loop)
 
     except Exception as e:
