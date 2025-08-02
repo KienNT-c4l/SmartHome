@@ -1,8 +1,8 @@
-import asyncio
 from telegram import Bot
 from telegram.constants import ParseMode
 from dotenv import load_dotenv
 import os
+
 
 load_dotenv()
 
@@ -18,8 +18,3 @@ async def send_telegram_alert(message):
         print("✅ Đã gửi cảnh báo Telegram")
     except Exception as e:
         print("❌ Lỗi gửi Telegram:", e)
-
-
-if __name__ == '__main__':
-    message = "⚠️ <b>Cảnh báo!</b> Nhiệt độ vượt ngưỡng cho phép!"
-    asyncio.run(send_telegram_alert(message))

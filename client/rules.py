@@ -12,17 +12,29 @@ asyncio_thread = threading.Thread(target=loop.run_forever, daemon=True)
 asyncio_thread.start()
 
 from server.notify import send_telegram_alert
-from HiveMQ import HiveMQ_Info
+from config_enum import MQTT_Info, THRESOLD
 
 
 # --- Thông số HiveMQ ---
-broker = HiveMQ_Info.broker
-port = HiveMQ_Info.port
-topic = HiveMQ_Info.topic # sửa nếu topic khác
-client_id = HiveMQ_Info.client_id
+broker = MQTT_Info.broker
+port = MQTT_Info.port
+topic = MQTT_Info.topic # sửa nếu topic khác
+client_id = MQTT_Info.client_id
 
 # --- Ngưỡng cảnh báo ---
-TEMP_THRESHOLD = 30.0  # °C
+TEMP_THRESHOLD = THRESOLD.TEMP_THRESHOLD  # °C
+GAS_THRESHOLD = THRESOLD.GAS_THRESHOLD
+
+
+def temperature_to_notify(temp):
+    if temp > TEMP_THRESHOLD:
+        message = f" Cảnh báo! Nhiệt độ hiện tại là {temp}°C (vượt ngưỡng {TEMP_THRESHOLD}°C)"
+        asyncio.run_coroutine_threadsafe(send_telegram_alert(message), loop)
+
+def gas_to_notify(gas):
+    if gas > GAS_THRESHOLD:
+        message = f" Cảnh báo! Khí ga hiện tại là {gas} (vượt ngưỡng {GAS_THRESHOLD})"
+        asyncio.run_coroutine_threadsafe(send_telegram_alert(message), loop)
 
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
@@ -34,17 +46,18 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     try:
         payload = msg.payload.decode()
-        data = json.loads(payload)  # ví dụ: {"temp": 31.2}
-        temperature = data.get("temp")
+        data = json.loads(payload)
+        temp = data.get('temperature')
+        hum = data.get('humidity')
+        gas = data.get('gas')
 
-        print(f" Nhiệt độ nhận được: {temperature}°C")
+        print(f" Nhiệt độ: {temp}°C, Độ ẩm: {hum}%, Không khí: {gas}")
 
-        if temperature > TEMP_THRESHOLD:
-            message = f" Cảnh báo! Nhiệt độ hiện tại là {temperature}°C (vượt ngưỡng {TEMP_THRESHOLD}°C)"
-            asyncio.run_coroutine_threadsafe(send_telegram_alert(message), loop)
+        temperature_to_notify(temp)
+        gas_to_notify(gas)
 
     except Exception as e:
-        print(f" Lỗi khi xử lý dữ liệu: {e}")
+        pass
 
 def main():
     client = mqtt_client.Client(client_id)
