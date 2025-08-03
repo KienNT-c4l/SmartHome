@@ -3,9 +3,11 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 class MQTT_Info:
-    broker = "broker.emqx.io"
+    broker = "192.168.72.138"
     port = 1883
-    topic = 'home/kitchen/temperature'  # sửa nếu topic khác
+    topic_temperature = 'home/kitchen/temperature' 
+    topic_humidity = 'home/kitchen/humidity'
+    topic_gas = 'home/kitchen/gas'
     client_id = 'smarthome-rules'
 
 class THRESOLD:

@@ -15,10 +15,13 @@ from server.notify import send_telegram_alert
 from config_enum import MQTT_Info, THRESOLD
 
 
-# --- Thông số HiveMQ ---
+# --- Thông số MQTT ---
 broker = MQTT_Info.broker
 port = MQTT_Info.port
-topic = MQTT_Info.topic # sửa nếu topic khác
+topic_temperature = MQTT_Info.topic_temperature
+topic_humidity = MQTT_Info.topic_humidity
+topic_gas = MQTT_Info.topic_gas
+# sửa nếu topic khác
 client_id = MQTT_Info.client_id
 
 # --- Ngưỡng cảnh báo ---
@@ -39,7 +42,10 @@ def gas_to_notify(gas):
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
         print(" Kết nối thành công MQTT")
-        client.subscribe(topic)
+        client.subscribe(topic_temperature)
+        client.subscribe(topic_humidity)
+        client.subscribe(topic_gas)
+       
     else:
         print(f" Kết nối thất bại, mã lỗi {rc}")
 
@@ -47,14 +53,21 @@ def on_message(client, userdata, msg):
     try:
         payload = msg.payload.decode()
         data = json.loads(payload)
-        temp = data.get('temperature')
-        hum = data.get('humidity')
-        gas = data.get('gas')
+        topic = msg.topic
 
-        print(f" Nhiệt độ: {temp}°C, Độ ẩm: {hum}%, Không khí: {gas}")
+        if topic == topic_temperature:
+            temp = float(data.get('temperature', 0))
+            print(f"🌡️  Nhiệt độ: {temp}°C")
+            temperature_to_notify(temp)
 
-        temperature_to_notify(temp)
-        gas_to_notify(gas)
+        elif topic == topic_humidity:
+            hum = float(data.get('humidity', 0))
+            print(f"💧 Độ ẩm: {hum}%")
+
+        elif topic == topic_gas:
+            gas = int(data.get('gas', 0))
+            print(f"🧪 Không khí: {gas}")
+            gas_to_notify(gas)
 
     except Exception as e:
         pass
