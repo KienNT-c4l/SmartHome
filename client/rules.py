@@ -55,16 +55,16 @@ def on_message(client, userdata, msg):
         data = json.loads(payload)
         topic = msg.topic
 
-        if topic == topic_temperature:
+        if topic.find(topic_temperature) != -1:
             temp = float(data.get('temperature', 0))
             print(f"🌡️  Nhiệt độ: {temp}°C")
             temperature_to_notify(temp)
 
-        elif topic == topic_humidity:
+        elif topic.find(topic_humidity) != -1:
             hum = float(data.get('humidity', 0))
             print(f"💧 Độ ẩm: {hum}%")
 
-        elif topic == topic_gas:
+        elif topic.find(topic_gas) != -1:
             gas = int(data.get('gas', 0))
             print(f"🧪 Không khí: {gas}")
             gas_to_notify(gas)
