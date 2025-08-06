@@ -12,7 +12,8 @@ class MQTT_Info:
 
 class THRESOLD:
     TEMP_THRESHOLD = 40.0  # °C
-    GAS_THRESHOLD = 600
+    GAS_THRESHOLD = 100
+    
 
 
     
