@@ -3,6 +3,7 @@ from paho.mqtt import client as mqtt_client
 
 import sys
 import os
+import time
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import asyncio
@@ -16,7 +17,8 @@ from config_enum import MQTT_Info, THRESOLD
 
 
 # --- Thông số MQTT ---
-broker = MQTT_Info.broker
+broker_main = MQTT_Info.broker_main
+broker_fallback = MQTT_Info.broker_fallback
 port = MQTT_Info.port
 topic_temperature = MQTT_Info.topic_temperature
 topic_humidity = MQTT_Info.topic_humidity
@@ -71,13 +73,30 @@ def on_message(client, userdata, msg):
 
     except Exception as e:
         pass
+    
+def try_connect(client, broker, port, retries=5, delay=1):
+    for i in range(retries):
+        try:
+            print(f"🔁 Kết nối thử {i+1} với {broker}...")
+            client.connect(broker, port)
+            return True
+        except Exception as e:
+            print(f"❌ Lỗi: {e}")
+            time.sleep(delay)
+    return False
 
 def main():
     client = mqtt_client.Client(client_id)
     client.on_connect = on_connect
     client.on_message = on_message
 
-    client.connect(broker, port)
+    if try_connect(client, broker_main, port):
+        print("✅ Kết nối thành công!")
+    else:
+        print(f"🔄 Kết nối đến {broker_main} không thành công, thử kết nối đến {broker_fallback}...")
+        if not try_connect(client, broker_fallback, port):
+            print("❌ Không thể kết nối đến cả hai broker!")
+            return
     client.loop_forever()
 
 if __name__ == '__main__':
