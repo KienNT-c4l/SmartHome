@@ -1,102 +1,66 @@
-Smart Door Lock với ESP32, LCD, Keypad, Servo & MQTT
-📖 Giới thiệu
+# Hệ thống mở cửa bằng bàn phím ma trận, LCD, Servo và MQTT (ESP32)
 
-Dự án này là một hệ thống khóa cửa thông minh sử dụng ESP32 kết hợp:
+## 📌 Giới thiệu
+Dự án này sử dụng **ESP32** để điều khiển servo mở/đóng cửa dựa trên mật khẩu nhập từ bàn phím ma trận.  
+Ngoài ra hệ thống có:
+- **LCD I2C** hiển thị trạng thái
+- Chức năng **đổi mật khẩu** và **reset mật khẩu về mặc định**
+- Kết nối **WiFi + MQTT** để gửi log mở cửa lên server
+- **EEPROM** để lưu mật khẩu
 
-Màn hình LCD I2C để hiển thị trạng thái.
+## ⚙️ Phần cứng
+- ESP32 DevKit
+- Servo SG90
+- LCD 16x2 I2C (địa chỉ `0x27`)
+- Keypad ma trận 4x4
+- Dây nối dupont
 
-Keypad 4x4 để nhập mật khẩu.
+## 📡 Sơ đồ chân kết nối
+| Thiết bị       | Chân ESP32 |
+|----------------|-----------|
+| **Servo SG90** | GPIO 16   |
+| **Keypad**     | R1 → GPIO 14  
+|                | R2 → GPIO 27  
+|                | R3 → GPIO 26  
+|                | R4 → GPIO 25  
+|                | C1 → GPIO 17  
+|                | C2 → GPIO 32  
+|                | C3 → GPIO 18  
+|                | C4 → GPIO 19 |
+| **LCD I2C**    | SDA → GPIO 21  
+|                | SCL → GPIO 22 |
 
-Servo SG90 để điều khiển khóa.
+<img width="1001" height="484" alt="image" src="https://github.com/user-attachments/assets/8a04d684-cbf6-41fd-8bd6-f527e207cbae" />
 
-EEPROM để lưu trữ mật khẩu.
+## 📦 Thư viện cần cài
+Vào **Arduino IDE** → **Sketch → Include Library → Manage Libraries** và tìm cài:
+- `LiquidCrystal_I2C` (LCD I2C)
+- `Keypad` (Bàn phím ma trận)
+- `ESP32Servo` (Điều khiển Servo)
+- `EEPROM` (Lưu mật khẩu)
+- `WiFi` (Kết nối WiFi)
+- `PubSubClient` (MQTT)
 
-WiFi + MQTT để gửi log mở cửa lên server.
+## 🔑 Mật khẩu mặc định & chế độ đặc biệt
+- **Mật khẩu mặc định:** `12345`
+- **Đổi mật khẩu:** nhập `*#01#`
+- **Reset mật khẩu:** nhập `*#02#`
 
-Hệ thống hỗ trợ:
+## 📜 Cách hoạt động
+1. Hệ thống hiển thị "Enter Password" trên LCD.
+2. Người dùng nhập mật khẩu:
+   - Nếu đúng → mở cửa (servo quay 180°), gửi log MQTT.
+   - Nếu sai → báo lỗi. Sai 3 lần → khóa 1 phút.
+3. Nếu nhập lệnh đặc biệt:
+   - `*#01#` → vào chế độ đổi mật khẩu.
+   - `*#02#` → vào chế độ reset mật khẩu.
+4. Mật khẩu mới sẽ được lưu vào EEPROM nên không bị mất khi khởi động lại.
 
-Mở cửa bằng mật khẩu.
+## 📡 Cấu hình WiFi & MQTT
+Trong code, chỉnh thông tin:
+```cpp
+const char* ssid = "Tên_WiFi";
+const char* password_wifi = "Mật_khẩu_WiFi";
 
-Đổi mật khẩu.
-
-Reset mật khẩu về mặc định.
-
-Chặn truy cập nếu nhập sai quá 3 lần.
-
-Gửi thông báo mở cửa qua MQTT.
-
-🛠️ Phần cứng cần chuẩn bị
-
-ESP32
-
-LCD 16x2 I2C (địa chỉ 0x27)
-
-Keypad 4x4
-
-Servo SG90
-
-Nguồn 5V
-
-Dây cắm & Breadboard
-
-📂 Thư viện sử dụng
-
-Cài đặt các thư viện trong Arduino IDE:
-
-#include <Arduino.h>
-#include <LiquidCrystal_I2C.h>
-#include <Keypad.h>
-#include <ESP32Servo.h>
-#include <EEPROM.h>
-#include <WiFi.h>
-#include <PubSubClient.h>
-
-⚙️ Cấu hình mạng & MQTT
-
-Thay đổi thông tin mạng WiFi và server MQTT trong code:
-
-const char* ssid = "SSIoT-02";
-const char* password_wifi = "SSIoT-02";
-
-const char* mqtt_server = "192.168.72.193";
+const char* mqtt_server = "192.168.xxx.xxx"; // IP MQTT broker
 const int mqtt_port = 1883;
-
-🔑 Mật khẩu mặc định & chế độ đặc biệt
-
-Mật khẩu mặc định: 12345
-
-Đổi mật khẩu: nhập *#01#
-
-Reset mật khẩu: nhập *#02#
-
-🖥️ Chức năng chính
-1. Nhập mật khẩu mở cửa
-
-Nếu đúng → mở cửa (servo quay 180°).
-
-Gửi log MQTT: topic /home/door/timelog, payload "open door".
-
-Tự đóng cửa sau 5 giây.
-
-2. Đổi mật khẩu
-
-Nhập *#01#
-
-Nhập mật khẩu mới 2 lần để xác nhận.
-
-Lưu vào EEPROM.
-
-3. Reset mật khẩu
-
-Nhập *#02#
-
-Xác nhận YES để khôi phục 12345.
-
-4. Bảo vệ khi nhập sai
-
-Nhập sai 3 lần liên tiếp → khóa 1 phút.
-
-🖼️ Sơ đồ nối dây
-<img width="1001" height="484" alt="image" src="https://github.com/user-attachments/assets/b32206f5-bcbd-4007-842c-4940580f2b80" />
-Lưu đồ thuật toán
-<img width="359" height="178" alt="image" src="https://github.com/user-attachments/assets/71bc2318-d6bf-4e9d-a63c-77b0d868e28c" />
