@@ -1,0 +1,5 @@
+sitemap page_49847ce4b0 label="kitchen" {
+    Colortemperaturepicker icon=temperature item=test_temperature label="Temp"
+    Colortemperaturepicker icon=humidity item=test_humid_ver_2 label="Humid"
+    Colortemperaturepicker icon=gas item=test_gas_1 label="Gas"
+}

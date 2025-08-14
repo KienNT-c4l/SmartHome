@@ -1,0 +1,5 @@
+sitemap page_11f1bdb543 label="room1" {
+    Colortemperaturepicker icon=temperature item=Humid_And_Temp_Temp label="Temp"
+    Colortemperaturepicker icon=humidity item=Humid_And_Temp_Humid label="Humid"
+    Switch icon=switch item=Dat0nlyfan_Fan_switch label="Fan"
+}

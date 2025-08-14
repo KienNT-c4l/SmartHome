@@ -1,0 +1,18 @@
+UID: mqtt:topic:MQTT_Broker:esp32_dht11_1
+label: Humid And Temp
+thingTypeUID: mqtt:topic
+configuration: {}
+bridgeUID: mqtt:broker:MQTT_Broker
+location: room1
+channels:
+  - id: esp32_dht11_1
+    channelTypeUID: mqtt:number
+    label: Temp
+    description: ""
+    configuration:
+      stateTopic: /home/room1/temperature
+  - id: esp32_dht11_2
+    channelTypeUID: mqtt:number
+    label: Humid
+    configuration:
+      stateTopic: /home/room1/humidity

@@ -1,0 +1,25 @@
+UID: mqtt:topic:MQTT_Broker:ce8fe4d4e1
+label: Duc Module
+thingTypeUID: mqtt:topic
+configuration: {}
+bridgeUID: mqtt:broker:MQTT_Broker
+location: kitchen
+channels:
+  - id: "1"
+    channelTypeUID: mqtt:number
+    label: Temp
+    description: ""
+    configuration:
+      stateTopic: /home/kitchen/temperature
+  - id: "2"
+    channelTypeUID: mqtt:number
+    label: Humid
+    description: ""
+    configuration:
+      stateTopic: /home/kitchen/humidity
+  - id: "3"
+    channelTypeUID: mqtt:number
+    label: Gas Status
+    description: ""
+    configuration:
+      stateTopic: /home/kitchen/gas

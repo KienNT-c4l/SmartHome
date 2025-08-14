@@ -1,0 +1,17 @@
+UID: mqtt:topic:MQTT_Broker:036bc079b3
+label: Dat-0nlyfan
+thingTypeUID: mqtt:topic
+configuration:
+  payloadNotAvailable: ON
+  transformationPattern:
+    - OFF
+bridgeUID: mqtt:broker:MQTT_Broker
+location: room1
+channels:
+  - id: esp32_dht11_1
+    channelTypeUID: mqtt:switch
+    label: Fan switch
+    description: ""
+    configuration:
+      commandTopic: /home/room1/fan/set
+      stateTopic: /home/room1/fan
