@@ -90,8 +90,10 @@ Dự án này sử dụng **ESP32** để:
 ---
 
 ## 🔌 Sơ đồ kết nối
+<img width="416" height="431" alt="Picture1" src="https://github.com/user-attachments/assets/72428c9e-fe1f-4e90-bc50-294186987a22" />
 
 ---
 
 ## 🖼 Lưu đồ thuật toán
+<img width="652" height="983" alt="image" src="https://github.com/user-attachments/assets/a03c31a2-98dc-4a12-bbc6-abbd22723dff" />
 
