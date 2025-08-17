@@ -15,7 +15,8 @@ SmartHome là hệ thống nhà thông minh mô phỏng bằng ESP32 và các th
 Hệ thống thể hiện khả năng thiết kế IoT mô phỏng, phát triển firmware ESP32, tích hợp MQTT, quản lý database MariaDB, và hiển thị/điều khiển qua OpenHAB.
 
 
-![Mô hình hệ thống SmartHome](https://github.com/hphuc15/SmartHome/blob/main/assets/demo1.png)
+![Mô hình hệ thống SmartHome](https://github.com/KienNT-c4l/SmartHome/blob/main/assets/demo1.png)
+
 
 
 ## 🚀 Tính năng
