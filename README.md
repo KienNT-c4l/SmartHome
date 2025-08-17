@@ -6,29 +6,30 @@ Thư mục `database/` chứa toàn bộ các tệp phục vụ cho việc khở
 
 ## 📁 Cấu trúc thư mục
 
+```text
 database/
-├── README.md                               # Tài liệu hướng dẫn
-├── schema                                  # Cấu trúc và dữ liệu ban đầu
-│   ├── create_table.sql                    # Tạo các bảng dữ liệu chính
-│   ├── config_data.sql                     # Dữ liệu cấu hình đơn vị đo (Lưu thông tin đơn vị)
-|   ├── sample_data.sql                     # Dữ liệu mẫu để test hệ thống
-│   └── reset_data.sql                      # Xóa dữ liệu mẫu
-├── queries                                 # Các truy vấn thường dùng
-│   ├── insert_device_control_log.sql       # Lịch sử điều khiển thiết bị
-│   ├── select_devices_on.sql               # Danh sách thiết bị đang bật
-|   ├── select_sensor_data.sql              # Lấy danh sách dữ liệu cảm biến
-|   ├── select_door_log.sql                 # Lịch sử mở cửa
-│   ├── select_all_rooms.sql                # Lấy danh sách tất cả các phòng
-│   ├── select_avg_sensor_today.sql         # Trung bình nhiệt độ/độ ẩm hôm nay 
-│   ├── select_devices_by_room.sql          # Lấy thiết bị theo từng phòng
-│   ├── select_latest_sensor_per_room.sql   # Dữ liệu cảm biến mới nhất mỗi phòng
-│   └── select_units.sql                    # Lấy thông tin các đơn vị đo
-└── scripts
-    ├── init_db.py                          # Script Python chạy /schema/create_table.sql khởi tạo CSDL
-    ├── test_sample_data.py                 # Script Python chạy /schema/sample_data.sql tạo dữ liệu mẫu
-    ├── mqtt_to_db.py                       # Script Python lưu dữ liệu vào database
-    └── reset_data.py                       # Script Python chạy /schema/clear_sample_data.sql xóa dữ liệu mẫu
-
+├── README.md                       # Tài liệu hướng dẫn
+├── schema                          # Cấu trúc và dữ liệu ban đầu
+│   ├── create_table.sql             # Tạo các bảng dữ liệu chính
+│   ├── config_data.sql              # Dữ liệu cấu hình đơn vị đo (lưu thông tin đơn vị)
+│   ├── sample_data.sql              # Dữ liệu mẫu để test hệ thống
+│   └── reset_data.sql               # Xóa dữ liệu mẫu
+├── queries                         # Các truy vấn thường dùng
+│   ├── insert_device_control_log.sql  # Lịch sử điều khiển thiết bị
+│   ├── select_devices_on.sql          # Danh sách thiết bị đang bật
+│   ├── select_sensor_data.sql         # Lấy danh sách dữ liệu cảm biến
+│   ├── select_door_log.sql            # Lịch sử mở cửa
+│   ├── select_all_rooms.sql           # Lấy danh sách tất cả các phòng
+│   ├── select_avg_sensor_today.sql    # Trung bình nhiệt độ/độ ẩm hôm nay
+│   ├── select_devices_by_room.sql     # Lấy thiết bị theo từng phòng
+│   ├── select_latest_sensor_per_room.sql  # Dữ liệu cảm biến mới nhất mỗi phòng
+│   └── select_units.sql               # Lấy thông tin các đơn vị đo
+└── scripts                         # Scripts Python hỗ trợ
+    ├── init_db.py                   # Chạy schema/create_table.sql khởi tạo CSDL
+    ├── test_sample_data.py          # Chạy schema/sample_data.sql tạo dữ liệu mẫu
+    ├── mqtt_to_db.py                # Script lưu dữ liệu vào database
+    └── reset_data.py                # Chạy schema/reset_data.sql xóa dữ liệu mẫu
+```
 ---
 
 ## 🧱 1. Cấu trúc bảng dữ liệu
