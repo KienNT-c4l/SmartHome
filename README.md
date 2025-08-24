@@ -51,7 +51,6 @@ The project demonstrates the ability to design and implement an IoT prototype, d
 
 ## 📂 Project Structure  
 
-```text
 SmartHome/
 ├── Door/                  # Door module: passcode entry
 ├── kitchen/               # Kitchen module: DHT11 + gas sensor + Telegram alert
