@@ -50,7 +50,7 @@ The project demonstrates the ability to design and implement an IoT prototype, d
 ---
 
 ## 📂 Project Structure  
-
+```bash
 SmartHome/
 ├── Door/                  # Door module: passcode entry
 ├── kitchen/               # Kitchen module: DHT11 + gas sensor + Telegram alert
@@ -59,7 +59,7 @@ SmartHome/
 ├── openHAB/               # OpenHAB configuration for visualization & control
 ├── assets/                # Images, GIFs, demo videos
 └── README.md
-
+```
 ---
 
 ## 🔧 Deployment Guide  
@@ -81,7 +81,7 @@ cd database
 python3 mqtt_to_db.py
 
  - This script subscribes to MQTT topics from ESP32 and stores the data in **MariaDB** in real time.  
-
+```
 ---
 
 ## 📊 Visualization & Control  
